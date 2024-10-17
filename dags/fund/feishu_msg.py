@@ -5,6 +5,7 @@ import json
 import time
 
 import requests
+from common.logger import log
 
 
 class FeishuBot:
@@ -84,10 +85,13 @@ def send_feishu_msg(text=None, columns=None, rows=None, title=None):
     secret = "wcAcSdyIxYepciPRzFouDc"
     bot = FeishuBot(webhook_url, secret)
 
+    rsp = None
     if text:
-        return bot.send_text_message(text, title)
+        rsp = bot.send_text_message(text, title)
     elif columns and rows:
-        return bot.send_table_message(columns, rows, title)
+        rsp = bot.send_table_message(columns, rows, title)
+    log.info("Feishu message sent end: %s", rsp)
+    return rsp
 
 
 if __name__ == "__main__":
@@ -110,4 +114,3 @@ if __name__ == "__main__":
         },
     ]
     response = send_feishu_msg(columns=columns, rows=rows, title="Custom Table Title")
-    print(response)

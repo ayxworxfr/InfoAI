@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 import akshare as ak
 import pandas as pd
+from common.logger import log
 from fund.feishu_msg import send_feishu_msg
 
 
@@ -29,7 +30,7 @@ class FundDataFetcher:
             # 过滤日期范围
             return data
         except Exception as e:
-            print(f"Error fetching data for fund {fund_code}: {e}")
+            log.info(f"Error fetching data for fund {fund_code}: {e}")
             return pd.DataFrame()
 
     def set_fund_codes(self, fund_codes):
@@ -59,7 +60,7 @@ class FundDataFetcher:
     def execute(self):
         all_data = []
         if not self.fund_codes:
-            print("No fund codes specified.")
+            log.info("No fund codes specified.")
             return pd.DataFrame()
 
         for code in self.fund_codes:
@@ -70,7 +71,7 @@ class FundDataFetcher:
                 all_data.append(data)
 
         if not all_data:
-            print("No data available for the specified fund codes.")
+            log.info("No data available for the specified fund codes.")
             return pd.DataFrame()
 
         # 合并所有基金的数据
@@ -188,7 +189,7 @@ class MonitorMsg:
         for _, row in df.iterrows():
             daily_growth_rate = row["日增长率"]
             if not daily_growth_rate or (check_date and row["净值日期"] != check_date):
-                print(f"Skipping row: {row}")
+                log.info(f"Skipping row: {row}")
                 continue
 
             daily_growth_rate = float(daily_growth_rate)
@@ -217,8 +218,8 @@ def query_daily_info():
         .set_columns_keywords(["单位净值", "日增长率", "累计净值"])
         .execute()
     )
-    print("Specific Date Result:")
-    print(result_specific_date)
+    log.info("Specific Date Result:")
+    log.info(result_specific_date)
 
     # 查询最新的数据
     fetcher = FundDataFetcher()  # 重新实例化以清除之前的设置
@@ -227,8 +228,8 @@ def query_daily_info():
         .set_columns_keywords(["单位净值", "日增长率", "累计净值"])
         .execute()
     )
-    print("Latest Data Result:")
-    print(result_latest_data)
+    log.info("Latest Data Result:")
+    log.info(result_latest_data)
 
 
 def query_fund_list():
@@ -243,8 +244,8 @@ def query_fund_list():
             "华宝标普油气上游股票人民币C",
         ],
     )
-    print("Fund List:")
-    print(fund_list)
+    log.info("Fund List:")
+    log.info(fund_list)
 
 
 def init_fund_codes() -> list:
@@ -263,14 +264,14 @@ def monitor():
         .set_columns_keywords(["单位净值", "日增长率", "累计净值"])
         .execute()
     )
-    print("Latest Data Result:")
-    print(result_latest_data)
+    log.info("Latest Data Result:")
+    log.info(result_latest_data)
 
     # 构建监控消息
     monitor_msgs = MonitorMsg.construct_monitor_msgs(result_latest_data)
     columns = MonitorMsg.build_columns()
     rows = MonitorMsg.to_rows(monitor_msgs)
-    print(f"Monitor Messages: {rows}")
+    log.info(f"Monitor Messages: {rows}")
     send_feishu_msg(columns=columns, rows=rows, title="每日基金监控")
     if len(monitor_msgs) == 0:
         return
