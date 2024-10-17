@@ -1,0 +1,32 @@
+{
+    "version": "1.0.0",
+    "configurations": [
+        {
+            "name": "Python: pytest",
+            "python": "${command:python.interpreterPath}",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                // "-c",
+                // 有配置tox.ini文件可添加
+                // "${workspaceFolder}/tox.ini",
+                "--color=yes",
+                "-v",
+                "-s",
+                // 执行单个测试文件
+                "${file}",
+                // 执行所有测试用例
+                // "${workspaceFolder}/tests",
+            ],
+             // 环境变量配置
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/dags",
+                "PYTEST_ADDOPTS": "-p no:cacheprovider",
+                "PYTEST_ASYNCIO_MODE": "auto",
+                "MANUAL": "true",
+            },
+            "console": "integratedTerminal"
+        }
+    ]
+}
