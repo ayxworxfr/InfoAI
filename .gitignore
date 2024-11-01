@@ -3,5 +3,6 @@ venv/
 *.log
 .idea/
 dist/
+.tox/
 **/__pycache__
 

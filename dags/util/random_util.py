@@ -9,8 +9,7 @@ def random_str(n: int) -> str:
     for i in range(n):
         c = random.choice(NUM)
         if i == 0 and c == "0":
-            continue
-        else:
-            result += c
+            c = random.choice(NUM[1:])
+        result += c
 
     return result

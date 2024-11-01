@@ -1,0 +1,33 @@
+name: Python application test
+
+# 触发条件：当代码被推送到仓库时
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # 你可以指定具体的Python版本，比如3.8
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
+    - name: Lint with flake8
+      run: |
+        # 停止在第一个lint错误处，你可以配置flake8的参数来符合你的代码规范
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # 忽略E501，因为flake8默认行长度检查是79，而PEP 8推荐是79或更多的行长度
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Test with pytest
+      run: |
+        pytest
