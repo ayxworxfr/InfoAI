@@ -24,6 +24,7 @@ services:
       AIRFLOW__CORE__FERNET_KEY: 'CsgkfxEolpHk-yAPQen50-k_ouRDI042xedttnM1BsE='
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       AIRFLOW__WEBSERVER__RBAC: 'true'
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: 'Asia/Shanghai'
     depends_on:
       - mysql
     ports:
@@ -32,6 +33,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
+      - /data/home/graycen/project:/opt/infoai
     command: ["bash", "-c", "airflow db init && airflow users create -r Admin -u admin -p admin -e admin@example.com -f Admin -l User && airflow webserver"]
 
   scheduler:
@@ -42,12 +44,14 @@ services:
       AIRFLOW__CORE__FERNET_KEY: 'CsgkfxEolpHk-yAPQen50-k_ouRDI042xedttnM1BsE='
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       AIRFLOW__WEBSERVER__RBAC: 'true'
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: 'Asia/Shanghai'
     depends_on:
       - mysql
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
+      - /data/home/graycen/project:/opt/infoai
     command: ["bash", "-c", "airflow scheduler"]
 
 volumes:

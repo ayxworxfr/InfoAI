@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 import akshare as ak
 import pandas as pd
@@ -272,14 +273,15 @@ def monitor():
     columns = MonitorMsg.build_columns()
     rows = MonitorMsg.to_rows(monitor_msgs)
     log.info(f"Monitor Messages: {rows}")
-    send_feishu_msg(columns=columns, rows=rows, title="每日基金监控")
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    send_feishu_msg(columns=columns, rows=rows, title=f"每日基金监控 {current_date}")
     if len(monitor_msgs) == 0:
         return
 
     monitor_msgs = MonitorMsg.construct_monitor_msgs(result_latest_data, threshold=0.1)
     columns = MonitorMsg.build_columns()
     rows = MonitorMsg.to_rows(monitor_msgs)
-    send_feishu_msg(columns=columns, rows=rows, title="基金波动监控")
+    send_feishu_msg(columns=columns, rows=rows, title=f"基金波动监控 {current_date}")
 
 
 if __name__ == "__main__":

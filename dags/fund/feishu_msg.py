@@ -50,14 +50,14 @@ class FeishuBot:
             "msg_type": "interactive",
             "card": {
                 "config": {"wide_screen_mode": True},
+                "header": {
+                    "template": "blue",
+                    "title": {
+                        "content": title if title else "Table",
+                        "tag": "plain_text"
+                    }
+                },
                 "elements": [
-                    {
-                        "tag": "div",
-                        "text": {
-                            "tag": "lark_md",
-                            "content": title if title else "Table",
-                        },
-                    },
                     {
                         "tag": "table",
                         "page_size": page_size,
